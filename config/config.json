@@ -1,0 +1,25 @@
+{
+    "rabbitmq": {
+        "url": "http://localhost:15672/",
+        "user": "user",
+        "password": "password",
+        "queues": [
+            {"name": "my_queue", "priority": 1, "description": "Primary Queue for transactions"},
+            {"name": "queue2", "priority": 2, "description": "Secondary Queue for reports"},
+            {"name": "queue3", "priority": 3, "description": "Tertiary Queue for logs"}
+        ]
+    },
+    "services": {
+        "proxy": {
+            "listen_port": 8080
+        },
+        "procurement": [
+            {"name": "procurement_8081", "url": "http://localhost:8081"},
+            {"name": "procurement_8082", "url": "http://localhost:8082"}
+        ],
+        "maintenance": {
+            "name": "maintenance",
+            "url": "http://localhost:8083"
+        }
+    }
+}
