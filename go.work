@@ -8,4 +8,6 @@ use (
 	./services/maintenance
 	./services/procurement_8081
 	./services/procurement_8082
+	./services/sc
+	./services/static
 )

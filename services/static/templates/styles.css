@@ -1,0 +1,134 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
+    background-color: #f5f5f5;
+}
+
+h1 {
+    margin: 4px;
+}
+/* ... other styles remain unchanged */
+
+div, label, input, textarea {
+    margin: 0;
+    padding: 0;
+}
+
+/* ... other styles remain unchanged */
+
+/* ... other styles remain unchanged */
+
+label {
+    margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+input[type="date"],
+textarea,
+select {   
+    padding: 0.5rem;
+}
+
+/* ... other styles remain unchanged */
+
+
+/* Header Styles */
+header {
+    text-align: center;
+   /* background-color: #4CAF50; */
+    color: rgb(39, 233, 9);
+}
+
+/* Form Styles */
+#family-form {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    background-color: white;
+}
+
+fieldset {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+/* Container Styles for Request Number, Required Date, and Justification */
+
+
+input[type="text"],
+input[type="date"],
+textarea,
+select {   
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+/* Table Styles */
+#items-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#items-table thead tr th{
+    text-align: center;
+}
+
+#items-table th,
+#items-table td {
+    padding: 0.2rem;
+    border: 1px solid #ddd;
+    text-align: left;
+    align-items: bottom;
+}
+
+textarea {
+    height: 34px;
+    resize: none;
+}
+
+input[type="number"] {
+    height: 30px;
+    width: 80px;
+}
+
+#items-table thead th {
+    background-color: #eee;
+}
+
+/* Button Styles */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #3e8e41;
+}
+
+.delete-row {
+    background-color: #f44336;
+    color: white;
+}
+
+.delete-row:hover {
+    background-color: #da291c;
+}

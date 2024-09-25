@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{.Title}}</title>
+</head>
+<body>
+    <h1>{{.Title}}</h1>
+    <p>{{.Message}}</p>
+    <p>User roles are: {{.Roles}}</p>
+
+    <div>
+        {{range $role, $access := .Access}}
+            <p>Role: {{$role}}, Access: {{$access}}</p>
+        {{end}}
+    </div>
+
+    {{ $readOnly := false }}
+    {{ $isVisible := true }}
+    {{ range .Roles }}
+        {{ if eq . "no-access" }}
+            {{ $isVisible = false }}
+        {{ end }}
+        {{ if eq . "readonly" }}
+            {{ $readOnly = true }}
+        {{ end }}
+    {{ end }}
+
+    {{ if $isVisible }}
+        <div data-access="{{if $readOnly}}readonly{{end}}">
+            <input type="text" {{if $readOnly}}readonly{{end}} placeholder="Enter text here">
+        </div>
+    {{ else }}
+        <p>This content is not accessible.</p>
+    {{ end }}
+
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Email</th>
+        </tr>
+        {{ range .Table }}
+            <tr>
+                <td>{{ .ID }}</td>
+                <td>{{ .Name }}</td>
+                <td>{{ .Role }}</td>
+                <td{{ if and (eq .Role "readonly") $isVisible }} readonly{{ end }}>{{ .Email }}</td>
+            </tr>
+        {{ end }}
+    </table>
+</body>
+</html>

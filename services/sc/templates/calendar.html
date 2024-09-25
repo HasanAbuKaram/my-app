@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/bulma-calendar/dist/css/bulma-calendar.min.css">
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <input type="date" class="input" id="datePicker">
+        </div>
+    </section>
+
+    <section class="section">
+        <button id="add-calendar">Add another date element to the DOM using bulma-calendar</button>
+    </section>
+
+    <script src="https://unpkg.com/bulma-calendar/dist/js/bulma-calendar.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var datePicker = bulmaCalendar.attach('#datePicker');
+        });
+
+        const button = document.querySelector("#add-calendar");
+        function AddBulmaCalendar() {
+            const bulma2 = document.createElement("input");
+            bulma2.type = "date";
+            document.body.appendChild(bulma2);
+            bulmaCalendar.attach(bulma2);
+        }
+
+
+
+        button.addEventListener("click", AddBulmaCalendar);
+
+    </script>
+</body>
+</html>

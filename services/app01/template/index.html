@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Golang WebAssembly Example</title>
+</head>
+<body>
+  <button onclick="handleClick()">Click me</button>
+  <button onclick="callHandleData()">handleData</button>
+  <button onclick="notifyme()">notifyme</button>
+  <div id="result"></div>
+  <script src="wasm_exec.js"></script>
+  <script>
+    const go = new Go();
+    let wasm;
+
+    fetch('main.wasm').then(response =>
+      response.arrayBuffer()
+    ).then(bytes => WebAssembly.instantiate(bytes, go.importObject)).then(result => {
+      wasm = result.instance;
+      go.run(wasm); // This will start the Go runtime
+    })
+
+    function callHandleData() {
+        let data = handleData(46, "Hello, World!");
+        // Parse the data using JSON.parse  // Parse the data using JSON.parse
+        let parsedData = JSON.parse(data);  // Double stringify for safety
+
+        // Access the text property from the parsed object
+        let text = parsedData.text;
+        let num = parsedData.number;
+        alert(data)
+        alert(text + " What is the "+ num);  // Or use text for further manipulation
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" itemscope="" itemtype="http://schema.org/WebSite">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=.8">
+    <meta name="csrf-token" content="NqrqP0pKO99ebZfWx4FKr3wxKKDE3ehQMcl99dmV">
+    <title>Table Layout | Tabulator</title>
+    <meta name="description" content="Customize the layout of your table to meet the needs of your project">
+    <meta name="author" content="Hasan Yousef">
+    <link href="http://localhost:8080/dist/css/tabulator_site.min.css" rel="stylesheet">  
+    <link href="http://localhost:8080/dist/css/google-font.css" rel="stylesheet" type="text/css">
+
+    
+    <link href="http://localhost:8080/dist/css/bulma.css" rel="stylesheet">
+    <link href="http://localhost:8080/dist/css/bulma-calendar.min.css" rel="stylesheet">
+    <link href="http://localhost:8080/dist/css/app1.css" rel="stylesheet">
+    <script type="text/javascript" src="http://localhost:8080/dist/js/tabulator.min.js"></script>
+
+</head>
+<body>
+    <header>
+        <h1>Purchase Request Form</h1>
+    </header>
+
+    <form id="family-form">
+        <fieldset>
+            <legend>General Information</legend>
+            
+            <div class="field is-horizontal">
+                  <div class="field-label is-normal" style="padding-right: 20px;">
+                    <label class="label">Department</label>
+                  </div>
+                  <div class="field-body">
+                    <div class="field">
+                      <div class="control">
+                        <div class="select is-fullwidth">
+                          <select>
+                            <option>Maintenance</option>
+                            <option>Business development</option>
+                            <option>Marketing</option>
+                            <option>Sales</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+
+                  <div class="field-label is-normal">
+                    <label class="label">Request Type</label>
+                  </div>
+                  <div class="field-body">
+                    <div class="field">
+                      <div class="control">
+                        <div class="select is-fullwidth">
+                          <select>
+                            <option>New Asset</option>
+                            <option>Asset Upgrade</option>
+                            <option>Material</option>
+                            <option>Service</option>
+                            <option>Costing</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+           
+      
+                  <div class="field-label is-normal">
+                    <label class="label">Request Delivery/Supply Date:</label>
+                  </div>
+                  <div class="field">
+                    <p class="control is-narrow">
+                      <input class="input" type="date">
+                  </div>
+                
+                  <div class="field-label is-normal">
+                    <label class="label"></label>
+                  </div>
+                  <div class="field-body">
+                    <div class="field">
+                <div class="file is-primary is-normal">
+                    <label class="file-label">
+                      <input class="file-input" type="file" name="resume" />
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label"> Upload Files </span>
+                      </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label">
+                <label class="label">Aproved budget?</label>
+              </div>
+              <div class="field-body">
+                <div class="field is-narrow">
+                  <div class="control" style="margin-top: 3px;">
+                    <label class="radio">
+                      <input type="radio" name="member">
+                      Yes
+                    </label>
+                    <label class="radio">
+                      <input type="radio" name="member">
+                      No
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>  
+            <div class="notification is-primary is-light box file-list is-hidden" id="file-list">
+                Attachments list
+              </div>
+
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <label class="label">Business Need:</label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <div class="control">
+                      <textarea class="textarea" style="resize: none" placeholder="Explain why this request is required by the business"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            
+        </fieldset>
+    </form id="family-form">    
+
+    </section>
+
+    <fieldset>
+
+
+    
+    <div id="items-table"></div>
+
+    <div class="field is-horizontal">
+        <div class="file is-primary is-normal">
+          <label class="file-label">
+            <input class="file-input" type="button" name="resume" />
+            <span class="file-cta">
+              <span id="add-row" class="file-label"> Add Item </span>
+            </span>
+          </label>
+      </div>
+<!--
+      <div class="file is-primary is-normal">
+        <label class="file-label">
+          <input class="file-input" type="button" name="resume" />
+          <span class="file-cta">
+            <span id="clear" class="file-label"> Reset </span>
+          </span>
+        </label>
+    </div>
+-->
+    </div>
+
+  </fieldset>
+
+  
+
+  <!--button type="submit">Submit</button-->
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <!-- Left empty for spacing -->
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <button class="button is-primary">
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script src="http://localhost:8080/static/script.js"></script>
+<script>
+//Create Date Editor
+var dateEditor = function(cell, onRendered, success, cancel){
+    //cell - the cell component for the editable cell
+    //onRendered - function to call when the editor has been rendered
+    //success - function to call to pass thesuccessfully updated value to Tabulator
+    //cancel - function to call to abort the edit and return to a normal cell
+
+    //create and style input
+    var cellValue = luxon.DateTime.fromFormat(cell.getValue(), "dd/MM/yyyy").toFormat("yyyy-MM-dd"),
+    input = document.createElement("input");
+
+    input.setAttribute("type", "date");
+
+    input.style.padding = "4px";
+    input.style.width = "100%";
+    input.style.boxSizing = "border-box";
+
+    input.value = cellValue;
+
+    onRendered(function(){
+        input.focus();
+        input.style.height = "100%";
+    });
+
+    function onChange(){
+        if(input.value != cellValue){
+            success(luxon.DateTime.fromFormat(input.value, "yyyy-MM-dd").toFormat("dd/MM/yyyy"));
+        }else{
+            cancel();
+        }
+    }
+
+    //submit new value on blur or change
+    input.addEventListener("blur", onChange);
+
+    //submit new value on enter
+    input.addEventListener("keydown", function(e){
+        if(e.keyCode == 13){
+            onChange();
+        }
+
+        if(e.keyCode == 27){
+            cancel();
+        }
+    });
+
+    return input;
+};
+
+
+//Build Tabulator
+var table = new Tabulator("#items-table", {
+    height:"311px",
+    columns:[
+        {title:"Item", field:"item", width:150, editor:"input"},
+        {title:"Qty", field:"qty", editor:"number"},
+        {title:"UoM", field:"gender", editor:"list", editorParams:{values:{"ea":"Each", "kg":"Kilogram", "unknown":"Unknown"}}},
+        {title:"Budget (SAR)", field:"budget", editor:"number"},
+        {title:"Required by", field:"rdd",  formatter:"date", hozAlign:"center", width:100, editor:true},
+        {title:"Detailed Description/Scope", field:"scope", editor:"input"},
+        {title:"Recomended Source", field:"recSource", editor:"input"},
+    ],
+});
+
+//Add row on "Add Row" button click
+document.getElementById("add-row").addEventListener("click", function(){
+    table.addRow({});
+});
+
+//Delete row on "Delete Row" button click
+document.getElementById("del-row").addEventListener("click", function(){
+    table.deleteRow(1);
+});
+
+//Clear table on "Empty the table" button click
+document.getElementById("clear").addEventListener("click", function(){
+    table.clearData()
+});
+
+//Reset table contents on "Reset the table" button click
+document.getElementById("reset").addEventListener("click", function(){
+    table.setData(tabledata);
+});
+
+// Initialize all input of date type.
+const calendars = bulmaCalendar.attach('[type="date"]', options);
+
+// Loop on each calendar initialized
+calendars.forEach(calendar => {
+	// Add listener to select event
+	calendar.on('select', date => {
+		console.log(date);
+	});
+});
+
+// To access to bulmaCalendar instance of an element
+const element = document.querySelector('#my-element');
+if (element) {
+	// bulmaCalendar instance is available as element.bulmaCalendar
+	element.bulmaCalendar.on('select', datepicker => {
+		console.log(datepicker.data.value());
+	});
+}
+</script>
+</body>
+</html>

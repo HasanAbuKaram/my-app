@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{.Title}}</title>
+    <style>
+        /* CSS styles here */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        th, td {
+            padding: 3px; /* Adjusted padding for narrower rows */
+            border: 1px solid #ddd;
+            text-align: left;
+            width: 150px; /* Set fixed width for cells */
+            overflow: hidden; /* Hide overflow content */
+            white-space: nowrap; /* Prevent wrapping */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* tr:hover {
+            background-color: #ddd;
+        } */
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .editable {
+            background-color: #fff;
+        }
+
+        .editable:focus {
+            background-color: #f0f0f0;
+        }
+
+        /* Define individual widths for columns */
+        .col1 {
+            width: 100px; /* Width for ID column */
+        }
+
+        .col2 {
+            width: 200px; /* Width for Name column */
+        }
+
+        .col3 {
+            width: 150px; /* Width for Role column */
+        }
+
+        .col4 {
+            width: 250px; /* Width for Email column */
+        }
+
+        /* Style for the first column */
+        .first-column {
+            background-color: #ffcccb; /* Light red background color */
+        }
+
+        /* Hover effect for table cells */
+        tbody tr:hover td,
+        tbody tr td:hover {
+            background-color: #ffe5cc; /* Light orange background color */
+        }
+
+        @media screen and (max-width: 600px) {
+            table {
+                border: 0;
+            }
+            th, td {
+                border: none;
+                display: block;
+                padding: 3px; /* Adjusted padding for narrower rows */
+                width: 100%; /* Set width to 100% for full width in smaller screens */
+            }
+            th {
+                background-color: #4CAF50;
+                color: white;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>{{.Title}}</h1>
+    <p>{{.Message}}</p>
+    <p>User roles are: {{.Roles}}</p>
+
+    <div>
+        {{range $role, $access := .Access}}
+            <p>Role: {{$role}}, Access: {{$access}}</p>
+        {{end}}
+    </div>
+
+    {{ $readOnly := false }}
+    {{ $isVisible := true }}
+    {{ range .Roles }}
+        {{ if eq . "no-access" }}
+            {{ $isVisible = false }}
+        {{ end }}
+        {{ if eq . "readonly" }}
+            {{ $readOnly = true }}
+        {{ end }}
+    {{ end }}
+
+    {{ if $isVisible }}
+        <div data-access="{{if $readOnly}} readonly {{end}}">
+            <input type="text" {{if $readOnly}} readonly {{end}} placeholder="Enter text here">
+        </div>
+    {{ else }}
+        <p>This content is not accessible.</p>
+    {{ end }}
+
+
+    
+    <table border="1">
+        <tr>
+            <th class="col1">ID</th>
+            <th class="col2">Name</th>
+            <th class="col3">Role</th>
+            {{ if $isVisible }}
+            <th class="col4" data-access="{{if $readOnly}}readonly{{end}}">Email</th>
+            {{ end }}
+        </tr>
+        {{range .Table}}
+            <tr>
+                <td contenteditable="true" class="editable col1 first-column">{{.ID}}</td>
+                <td contenteditable="true" class="editable col2">{{.Name}}</td>
+                <td contenteditable="true" class="editable col3">{{.Role}}</td>
+                {{ if $isVisible }}
+                <td contenteditable="true" class="editable col4" data-access="{{if $readOnly}}readonly{{end}}">{{.Email}}</td>
+                {{ end }}
+            </tr>
+        {{end}}
+    </table>
+
+    <script>
+        // Add event listeners to each editable cell
+        const editableCells = document.querySelectorAll('.editable');
+        editableCells.forEach(cell => {
+            cell.addEventListener('input', function() {
+                // Add your logic here to handle input changes
+                console.log('Cell content changed:', this.textContent);
+            });
+        });
+
+                // Add event listeners to each cell in the table body
+                const cells = document.querySelectorAll('tbody td');
+        cells.forEach(cell => {
+            cell.addEventListener('mouseover', function() {
+                // Add highlighted class to the row
+                this.parentNode.classList.add('highlighted');
+
+                // Add highlighted class to all cells in the same column
+                const index = Array.from(this.parentNode.children).indexOf(this);
+                const allRows = document.querySelectorAll('tbody tr');
+                allRows.forEach(row => {
+                    row.children[index].classList.add('highlighted');
+                });
+            });
+
+            cell.addEventListener('mouseout', function() {
+                // Remove highlighted class from the row
+                this.parentNode.classList.remove('highlighted');
+
+                // Remove highlighted class from all cells in the same column
+                const index = Array.from(this.parentNode.children).indexOf(this);
+                const allRows = document.querySelectorAll('tbody tr');
+                allRows.forEach(row => {
+                    row.children[index].classList.remove('highlighted');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

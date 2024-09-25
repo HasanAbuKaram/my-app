@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .header, .kids-table {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .file-list {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Family Information Form</h1>
+
+<form id="family-form">
+    <div class="header">
+        <h2>Parent Information</h2>
+        <label for="first-name">First Name:</label>
+        <input type="text" id="first-name" name="first_name" value="John" required><br><br>
+        <label for="last-name">Last Name:</label>
+        <input type="text" id="last-name" name="last_name" value="Doe" required><br><br>
+        <label for="parent-nationality">Nationality:</label>
+        <input type="text" id="parent-nationality" name="parent_nationality" value="American" required><br><br>
+        <label for="file-upload">Upload Files:</label>
+        <input type="file" id="file-upload"><br><br>
+        <div class="file-list" id="file-list"></div>
+    </div>
+
+    <div class="kids-table">
+        <h2>Kids Information</h2>
+        <table id="kids-table">
+            <thead>
+                <tr>
+                    <th>Kid Name</th>
+                    <th>Gender</th>
+                    <th>Age</th>
+                    <th>Birthday</th>
+                    <th>Nationality</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <button type="button" id="add-kid">Add Kid</button>
+    </div>
+
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    let filesData = [];
+
+    document.getElementById('file-upload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fileContent = e.target.result;
+                filesData.push({
+                    name: file.name,
+                    content: fileContent
+                });
+                updateFileList();
+            };
+
+            reader.readAsText(file);
+        }
+    });
+
+    function updateFileList() {
+        const fileList = document.getElementById('file-list');
+        fileList.innerHTML = '';
+        filesData.forEach((file, index) => {
+            const fileItem = document.createElement('div');
+            fileItem.textContent = `File ${index + 1}: ${file.name}`;
+            fileList.appendChild(fileItem);
+        });
+    }
+
+// Event delegation for delete buttons
+document.querySelector('#kids-table tbody').addEventListener('click', function(event) {
+    if (event.target.classList.contains('delete-row')) {
+        const row = event.target.closest('tr'); // Get the closest row to the clicked button
+        row.remove(); // Remove the row from the table
+    }
+});
+
+// Event listener for adding a new kid row
+document.getElementById('add-kid').addEventListener('click', function() {
+    const kidsTableBody = document.querySelector('#kids-table tbody');
+    const parentNationality = document.getElementById('parent-nationality').value;
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td><input type="text" name="kid_name[]" required></td>
+        <td>
+            <select name="kid_gender[]" required>
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+            </select>
+        </td>
+        <td><input type="number" name="kid_age[]" required></td>
+        <td><input type="date" name="kid_birthday[]" required></td>
+        <td><input type="text" name="kid_nationality[]" value="${parentNationality}" required></td>
+        <td><button type="button" class="delete-row">Delete</button></td>
+    `;
+    kidsTableBody.appendChild(newRow);
+});
+
+
+    document.getElementById('family-form').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Collect the form data
+        const formData = new FormData(this);
+
+        // Convert the form data to a JSON object
+        const formDataJson = {};
+        formData.forEach((value, key) => {
+            if (key.endsWith('[]')) {
+                key = key.slice(0, -2);
+                if (!formDataJson[key]) {
+                    formDataJson[key] = [];
+                }
+                formDataJson[key].push(value);
+            } else {
+                formDataJson[key] = value;
+            }
+        });
+
+        // Add the files data to the JSON object
+        formDataJson.files = filesData;
+
+        try {
+            // Send the form data to the server
+            const response = await fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formDataJson)
+            });
+
+            if (response.ok) {
+                alert('Form submitted successfully!');
+            } else {
+                alert('Failed to submit the form.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while submitting the form.');
+        }
+    });
+
+    // Add event listener to all delete buttons
+    const deleteButtons = document.querySelectorAll('.delete-row');
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const row = this.closest('tr'); // Get the closest row to the clicked button
+            row.remove(); // Remove the row from the table
+        });
+    });
+</script>
+
+</body>
+</html>
