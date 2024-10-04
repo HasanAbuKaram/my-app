@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 )
 
 // Main entry point of the application
@@ -12,6 +14,16 @@ func main() {
 	if err := LoadConfig("config/config.json"); err != nil {
 		log.Fatalf("Error loading config: %v", err) // Log error and exit
 	}
+
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	staticPath := filepath.Join(cwd, "common")
+
+	fs := http.FileServer(http.Dir(staticPath))
+	http.Handle("/common/", http.StripPrefix("/common/", fs))
 
 	// Access and log the loaded configuration
 	log.Printf("RabbitMQ URL: %s", AppConfig.RabbitMQ.URL)

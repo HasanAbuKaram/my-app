@@ -1,0 +1,18 @@
+<!-- microservice/templates/index.html -->
+{{ define "content" }}
+
+
+<p>This is the content for Microservice.</p>
+
+<script type="module">
+    // Your service-specific JavaScript can go here
+    // In your main application file
+    // <script src="/common/templates/common.js"><\/script> 
+    import { initializeMSAL } from '/common/templates/common.js'; // Adjust the path as needed
+
+    // Call the function to initialize MSAL
+    initializeMSAL();
+
+</script>
+{{ end }}
+
