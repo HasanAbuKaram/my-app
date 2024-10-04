@@ -1,31 +1,35 @@
 package main
 
 import (
+	"html/template"
 	"net/http"
+	"path/filepath"
 )
 
-// serveIndex serves the static HTML content for the home page
-func serveIndex(w http.ResponseWriter) {
-	htmlContent := `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Microservices Application</title>
-        <style>
-            body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-            button { padding: 10px 20px; font-size: 16px; margin: 10px; }
-        </style>
-    </head>
-    <body>
-        <h1>Microservices Application</h1>
-        <button onclick="window.location.href='/procurement'">Procurement</button>
-        <button onclick="window.location.href='/maintenance'">Maintenance</button>
-    </body>
-    </html>
-    `
-	w.Header().Set("Content-Type", "text/html")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(htmlContent))
+// serveIndex renders the HTML template based on authentication status
+func serveIndex(w http.ResponseWriter, r *http.Request) {
+	// Check for MSAL authentication cookie
+	if _, err := r.Cookie("auth_token"); err == nil {
+		// User is authenticated, load the dashboard
+		renderTemplate(w, "dashboard.html")
+	} else {
+		// User is not authenticated, load the login page
+		renderTemplate(w, "index.html")
+	}
+}
+
+// renderTemplate renders the specified HTML template
+func renderTemplate(w http.ResponseWriter, templateName string) {
+	// Parse the template file
+	tmpl, err := template.ParseFiles(filepath.Join("./gateway/", "templates", templateName))
+	if err != nil {
+		http.Error(w, "Error loading template", http.StatusInternalServerError)
+		return
+	}
+
+	// Execute the template and render it to the response writer
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		http.Error(w, "Error rendering template", http.StatusInternalServerError)
+	}
 }

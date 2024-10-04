@@ -13,5 +13,5 @@ var version string
 //go:embed repoUrl.txt
 var repoUrl string
 
-//go:embed index.html login.html x.html
+//go:embed index.html
 var content embed.FS

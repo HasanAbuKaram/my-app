@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 )
 
@@ -20,7 +20,7 @@ func LoadConfig(filePath string) error {
 	defer configFile.Close()
 
 	// Read the file's contents
-	byteValue, err := ioutil.ReadAll(configFile)
+	byteValue, err := io.ReadAll(configFile)
 	if err != nil {
 		return fmt.Errorf("failed to read config file: %v", err)
 	}

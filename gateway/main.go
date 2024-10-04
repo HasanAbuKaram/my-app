@@ -19,6 +19,11 @@ func main() {
 
 	// Set up the HTTP server with the proxy handler
 	http.HandleFunc("/", proxyHandler) // All requests will be handled by proxyHandler
+	// Start a goroutine with an HTTP server
+	http.HandleFunc("/login", login)
+	http.HandleFunc("/api/token", tokenHandler)
+	http.HandleFunc("/profile", profileHandler) // Protected route
+	http.HandleFunc("/logout", logoutHandler)
 
 	// Start the proxy server
 	log.Printf("Starting proxy server on :%d\n", AppConfig.Services.Proxy.ListenPort)

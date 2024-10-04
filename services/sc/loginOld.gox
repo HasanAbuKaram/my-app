@@ -1,0 +1,40 @@
+package main
+
+import (
+	"fmt"
+	"html/template"
+	"net/http"
+	"time"
+)
+
+func login(w http.ResponseWriter, _ *http.Request) {
+	fmt.Println("You are accessing the login screen")
+	tmpl, err := template.ParseFS(content, "login.html")
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error parsing template: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error executing template: %v", err), http.StatusInternalServerError)
+		return
+	}
+}
+
+// Set a JWT token in the cookie after successful login
+func setTokenCookie(w http.ResponseWriter, token string) {
+	cookie := http.Cookie{
+		Name:     "session_token",
+		Value:    token,
+		Expires:  time.Now().Add(24 * time.Hour), // Set token expiry
+		Path:     "/",                            // Allow across all paths
+		HttpOnly: true,                           // Prevent JavaScript access
+		Secure:   true,                           // Send cookie only over HTTPS
+		SameSite: http.SameSiteLaxMode,           // Adjust based on requirements
+	}
+
+	fmt.Println(cookie)
+	http.SetCookie(w, &cookie)
+}
