@@ -5,16 +5,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .Title }}</title>
+   
     <script src="https://alcdn.msauth.net/browser/2.30.0/js/msal-browser.min.js"></script>
+ 
+
+    <link rel="stylesheet"
+        href="http://localhost:8080/common/libs/fontawesome-free-6.6.0-web/css/fontawesome.min.css">
+
+    <link rel="stylesheet"
+        href="http://localhost:8080/common/libs/bulma-1.0.2/bulma/css/bulma.min.css">
+
+    <style>
+        html, body {
+            padding: 0px;
+            padding-left: .5%;
+            padding-right: .5%;
+        }
+    </style>
+
+ <!--       
+    <style>
+        @import "http://localhost:8080/common/libs/bulma-1.0.2/bulma/css/bulma.min.css";
+        @import "http://localhost:8080/common/libs/fontawesome-free-6.6.0-web/css/fontawesome.min.css"; 
+    </style>
 <!--
     <link rel="stylesheet" href="../libs/bulma-1.0.2/bulma/css/versions/bulma-no-dark-mode.css">
            @import "https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css";
-    -->
+
     <style>
+                @import "https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css";
         @import "../common/libs/bulma-1.0.2/bulma/css/versions/bulma-no-dark-mode.css";
         body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
         button { padding: 10px 20px; font-size: 16px; margin: 10px; }
     </style>
+        -->
 </head>
 <body>
         <!-- Welcome Message 
@@ -43,7 +67,7 @@
                 </div>
             </div>
           </div>
-
+          
     {{ block "content" . }}{{ end }}
     <script type="module">
         import { initializeMSAL, logout, myMSALObj, name } from '/common/templates/common.js';

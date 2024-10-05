@@ -22,7 +22,7 @@ func main() {
 	// Define the microservice related static files, that have nothing to do with other microservices
 	www := filepath.Join(cwd, "microservice")
 	public := http.FileServer(http.Dir(www))
-	http.Handle("/www/", http.StripPrefix("/www/", public))
+	http.Handle("/www/", http.StripPrefix("/", public))
 
 	// Handle the health check endpoint
 	http.HandleFunc("/health", healthHandler)

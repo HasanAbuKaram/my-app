@@ -36,7 +36,7 @@ function logout() {
                     // Proceed with MSAL logout
                     myMSALObj.logout();
                     
-                //    window.location.replace("/");
+                    window.location.replace("/");
                     //location.reload();
                 } else {
                     console.error("Failed to clear session on the server.");
