@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microservices Application</title>
+    <script src="https://alcdn.msauth.net/browser/2.30.0/js/msal-browser.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        .card { cursor: pointer; }
+    </style>
+</head>
+<body>
+    <!-- Welcome Message -->
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Welcome to the E-Supply Chain Platform</h1>
+        </div>
+    </section>
+
+    <!-- Logout Button -->
+    <div id="message" class="subtitle"></div><button id="logoutButton" class="button is-danger is-hidden">Logout</button>
+
+    <!-- Cards Section -->
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+
+                <!-- Card 1: Create PR -->
+                <div class="column is-one-quarter">
+                    <div class="card" id="createPRCard">
+                        <div class="card-content">
+                            <p class="title">Create PR</p>
+                            <p class="subtitle">Submit a new Purchase Request</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: My PRs Status -->
+                <div class="column is-one-quarter">
+                    <div class="card" id="myPRStatusCard">
+                        <div class="card-content">
+                            <p class="title">My PRs Status</p>
+                            <p class="subtitle">Track the status of your PRs</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Complain -->
+                <div class="column is-one-quarter">
+                    <div class="card" id="complainCard">
+                        <div class="card-content">
+                            <p class="title">Complain</p>
+                            <p class="subtitle">Submit a complaint</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Knowledge Base -->
+                <div class="column is-one-quarter">
+                    <div class="card" id="knowledgeBaseCard">
+                        <div class="card-content">
+                            <p class="title">Knowledge Base</p>
+                            <p class="subtitle">Find helpful resources</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <script type="module">
+        import { initializeMSAL, logout, myMSALObj, name } from '/common/templates/common.js';
+
+        initializeMSAL();
+        // Wait for DOMContentLoaded to ensure the page is fully loaded
+        document.addEventListener("DOMContentLoaded", function () {
+            // Set the welcome message if the user is logged in
+            if (name) {
+                document.querySelector("#message").innerHTML = `Hello, ${name}!`;
+
+                // Make the logout button visible
+                document.querySelector("#logoutButton").classList.remove("is-hidden");
+
+                // Attach the logout functionality
+                logout(); // Call logout function here to attach the event listener
+            }
+        });
+
+        // Click event listeners for cards
+        document.querySelector("#createPRCard").addEventListener("click", function() {
+            window.location.href = '/procurement';
+        });
+
+        document.querySelector("#myPRStatusCard").addEventListener("click", function() {
+            window.location.href = '/my-pr-status';
+        });
+
+        document.querySelector("#complainCard").addEventListener("click", function() {
+            window.location.href = '/complain';
+        });
+
+        document.querySelector("#knowledgeBaseCard").addEventListener("click", function() {
+            window.location.href = '/knowledge-base';
+        });
+    </script>
+
+</body>
+</html>

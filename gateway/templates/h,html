@@ -6,6 +6,7 @@
     <title>Microservices Application</title>
     <script src="https://alcdn.msauth.net/browser/2.30.0/js/msal-browser.min.js"></script>
     <style>
+        @import "../common/libs/bulma-1.0.2/bulma/css/versions/bulma-no-dark-mode.css";
         body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
         button { padding: 10px 20px; font-size: 16px; margin: 10px; }
     </style>

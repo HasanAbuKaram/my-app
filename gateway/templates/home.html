@@ -81,16 +81,8 @@
     </footer>
 
     <!-- JavaScript -->
-    <script type="module">
-        import { initializeMSAL, myMSALObj, name } from '/common/templates/common.js';
-
-        initializeMSAL();
-        // Now you can access `myMSALObj` in other parts of your app
-        console.log(myMSALObj); // It will be available after initializeMSAL is called
-       // document.querySelector("#message").innerHTML += "Hello, ! " + name + "!";
-       // document.querySelector("#logoutButton").classList.remove("is-hidden");
-
-        document.querySelector("#plastbauteamButton").addEventListener("click", async function(event) {
+    <script>
+        document.querySelector("#plastbauteamButton").addEventListener("click", function(event) {
             // Prevent the default anchor behavior (optional)
             event.preventDefault();
 
@@ -116,15 +108,17 @@
             const accounts = myMSALObj.getAllAccounts();
             if (accounts.length > 0) {
                 // User is logged in
-              //  alert("Hello, " + accounts[0].name + "!") ;
+                alert("Hello, " + accounts[0].name + "!") ;
                 window.location.replace("http://localhost:8080/"); 
             } 
 
             // Redirect to the PlastBau team page or any desired URL
             myMSALObj.loginPopup()
                 .then(response => {
-                    alert("Hello, " + response.account.name + "!");
-                    
+                    document.querySelector("#message").innerHTML = "Hello, " + response.account.name + "!";
+                    document.querySelector("#loginButton").style.display = "none";
+                    document.querySelector("#logoutButton").style.display = "block";
+
                     myMSALObj.setActiveAccount(response.account);
 
                     myMSALObj.acquireTokenSilent({
@@ -148,7 +142,6 @@
                             try {
                                 const jsonData = JSON.parse(data);
                                 console.log("Server response:", jsonData);
-                                alert("Hello, " + jsonData.message + "!") ;
                                 window.location.replace("http://localhost:8080/");
                             } catch (error) {
                                 console.error("Failed to parse JSON:", error, "Raw response:", data);
@@ -161,7 +154,7 @@
                         console.error("Failed to acquire access token:", error);
                     });
                 }).catch(error => {
-                    console.log("Error: " + error.message);
+                    document.querySelector("#message").innerHTML = "Error: " + error.message;
                 });
         });
     </script>

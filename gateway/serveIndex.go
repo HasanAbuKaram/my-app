@@ -11,7 +11,7 @@ func serveIndex(w http.ResponseWriter, r *http.Request) {
 	// Check for MSAL authentication cookie
 	if _, err := r.Cookie("auth_token"); err == nil {
 		// User is authenticated, load the dashboard
-		renderTemplate(w, "dashboard.html")
+		renderTemplate(w, "plastbau.html")
 	} else {
 		// User is not authenticated, load the login page
 		renderTemplate(w, "index.html")

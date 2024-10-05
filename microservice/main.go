@@ -14,11 +14,15 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	// Define global static files, that are common for the workspace
 	staticPath := filepath.Join(cwd, "common")
+	static := http.FileServer(http.Dir(staticPath))
+	http.Handle("/common/", http.StripPrefix("/common/", static))
 
-	fs := http.FileServer(http.Dir(staticPath))
-	http.Handle("/common/", http.StripPrefix("/common/", fs))
+	// Define the microservice related static files, that have nothing to do with other microservices
+	www := filepath.Join(cwd, "microservice")
+	public := http.FileServer(http.Dir(www))
+	http.Handle("/www/", http.StripPrefix("/www/", public))
 
 	// Handle the health check endpoint
 	http.HandleFunc("/health", healthHandler)

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microservices Application</title>
+    <style>
+        @import "../common/libs/bulma-1.0.2/bulma/css/versions/bulma-no-dark-mode.css";
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        button { padding: 10px 20px; font-size: 16px; margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Microservices Application</h1>
+   
+     <!-- 
+    <button onclick="window.location.href='/login'">Login</button>
+     -->
+
+    <button id="loginButton">Login</button>
+
+    <script>
+      //  Handle login button click
+        document.querySelector("#loginButton").addEventListener("click", function() {
+            // Clear the session storage item
+           sessionStorage.removeItem("msal.interaction.status");
+
+            // Redirect to the login page
+           window.location.href = '/login';
+        });
+    </script>
+</body>
+</html>

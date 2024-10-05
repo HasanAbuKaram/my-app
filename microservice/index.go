@@ -33,8 +33,8 @@ func procurementHandler(cwd string) http.HandlerFunc {
 			Title   string
 			Heading string
 		}{
-			Title:   "Microservice 1",
-			Heading: "Welcome to Microservice 1",
+			Title:   "PR Creation",
+			Heading: "Create Purchase Request",
 		}
 		tmpl.ExecuteTemplate(w, "base.html", data)
 	}

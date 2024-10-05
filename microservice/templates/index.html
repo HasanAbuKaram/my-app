@@ -1,18 +1,176 @@
-<!-- microservice/templates/index.html -->
 {{ define "content" }}
 
+<div class="card" id="createPRCard">
+    <header class="card-header">
+        <p class="card-header-title">General Information</p>
+        <button class="card-header-icon" aria-label="more options">
+            <span class="icon">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+        </button>
+    </header>
+    <div class="card-content">
+        <form id="family-form">
+            <fieldset>
+                <!-- Your fields here -->
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal" style="padding-right: 20px;">
+                        <label class="label">Department</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select>
+                                        <option>Maintenance</option>
+                                        <option>Business development</option>
+                                        <option>Marketing</option>
+                                        <option>Sales</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-<p>This is the content for Microservice.</p>
+                    <div class="field-label is-normal">
+                        <label class="label">Request Type</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select>
+                                        <option>New Asset</option>
+                                        <option>Asset Upgrade</option>
+                                        <option>Material</option>
+                                        <option>Service</option>
+                                        <option>Costing</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field-label is-horizontal">
+                        <label class="label">Request Delivery/Supply Date:</label>
+                    </div>
+                    <div class="field">
+                        <p class="control is-narrow">
+                            <input class="input" type="date">
+                        </p>
+                    </div>
+
+                    <div class="field-label is-normal">
+                        <label class="label"></label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="file is-primary is-normal">
+                                <label class="file-label">
+                                    <input class="file-input" type="file" name="resume" />
+                                    <span class="file-cta">
+                                        <span class="file-icon">
+                                            <i class="fas fa-upload"></i>
+                                        </span>
+                                        <span class="file-label"> Upload Files </span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label">
+                        <label class="label">Approved budget?</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-narrow">
+                            <div class="control" style="margin-top: 3px;">
+                                <label class="radio">
+                                    <input type="radio" name="member">
+                                    Yes
+                                </label>
+                                <label class="radio">
+                                    <input type="radio" name="member">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+                
+                <div class="notification is-primary is-light box file-list is-hidden" id="file-list">
+                    Attachments list
+                </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Business Need:</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <textarea class="textarea" style="resize: none; margin-top: 10px; padding: 10px;" placeholder="Explain why this request is required by the business"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+
+        <div class="notification is-primary is-light box file-list is-hidden" id="file-list">
+            Attachments list
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <header class="card-header">
+        <p class="card-header-title">Purchase Request Lines</p>
+        <button class="card-header-icon" aria-label="more options">
+            <span class="icon">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+        </button>
+    </header>
+    <div class="card-content">
+        <form id="lines-form">
+            <!-- Purchase request lines form content -->
+            <div id="items-table"></div>
+
+            <div class="field is-horizontal">
+                <div class="file is-primary is-normal">
+                    <label class="file-label">
+                        <input class="file-input" type="button" name="resume" />
+                        <span class="file-cta">
+                            <span id="add-row" class="file-label"> Add Item </span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--button type="submit">Submit</button-->
+<div class="field is-horizontal">
+    <div class="field-label">
+        <!-- Left empty for spacing -->
+    </div>
+    <div class="field-body">
+        <div class="field">
+            <div class="control">
+                <button class="button is-primary">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="module">
-    // Your service-specific JavaScript can go here
-    // In your main application file
-    // <script src="/common/templates/common.js"><\/script> 
-    import { initializeMSAL } from '/common/templates/common.js'; // Adjust the path as needed
-
-    // Call the function to initialize MSAL
-    initializeMSAL();
-
+    // Your JavaScript code remains the same
 </script>
-{{ end }}
 
+{{ end }}

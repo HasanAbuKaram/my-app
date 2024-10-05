@@ -81,16 +81,8 @@
     </footer>
 
     <!-- JavaScript -->
-    <script type="module">
-        import { initializeMSAL, myMSALObj, name } from '/common/templates/common.js';
-
-        initializeMSAL();
-        // Now you can access `myMSALObj` in other parts of your app
-        console.log(myMSALObj); // It will be available after initializeMSAL is called
-       // document.querySelector("#message").innerHTML += "Hello, ! " + name + "!";
-       // document.querySelector("#logoutButton").classList.remove("is-hidden");
-
-        document.querySelector("#plastbauteamButton").addEventListener("click", async function(event) {
+    <script>
+        document.querySelector("#plastbauteamButton").addEventListener("click", function(event) {
             // Prevent the default anchor behavior (optional)
             event.preventDefault();
 

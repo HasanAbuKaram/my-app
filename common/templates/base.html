@@ -6,21 +6,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .Title }}</title>
     <script src="https://alcdn.msauth.net/browser/2.30.0/js/msal-browser.min.js"></script>
+<!--
+    <link rel="stylesheet" href="../libs/bulma-1.0.2/bulma/css/versions/bulma-no-dark-mode.css">
+           @import "https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css";
+    -->
     <style>
+        @import "../common/libs/bulma-1.0.2/bulma/css/versions/bulma-no-dark-mode.css";
         body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
         button { padding: 10px 20px; font-size: 16px; margin: 10px; }
     </style>
 </head>
 <body>
-    <h1>{{ .Heading }}</h1>
+        <!-- Welcome Message 
+        <section class="section">
+            <div class="container">
+                <h1 class="title">{{ .Heading }}</h1>
+            </div>
+        </section>
+        -->
+
+        <div class="level">
+            <!-- Empty left side to push everything to the right -->
+            <div class="level-left"></div>
+          
+            <!-- Right side with all elements aligned horizontally and vertically -->
+            <div class="level-right">
+                <div class="level-item">
+                    <!-- Add a block container for the message and time -->
+                    <div>
+                        <div id="message" class="subtitle" style="display: block; margin-bottom: 1px;"></div>
+                        <time id="realTime" datetime="" style="display: block; margin-top: 1px;"></time>
+                    </div>
+                </div>
+                <div class="level-item">
+                    <button id="logoutButton" class="button is-danger is-hidden">Logout</button>
+                </div>
+            </div>
+          </div>
+
     {{ block "content" . }}{{ end }}
-   
-    <button id="logoutButton">Logout</button> 
-    <button onclick="window.location.href='/procurement'">Procurement</button>
-    <button onclick="window.location.href='/maintenance'">Maintenance</button>
-
-    <div id="message"></div>
-
+    <script type="module">
+        import { initializeMSAL, logout, myMSALObj, name } from '/common/templates/common.js';
+    
+        initializeMSAL();
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            // Set the welcome message if the user is logged in
+            if (name) {
+                document.querySelector("#message").innerHTML = `Hello, ${name}!`;
+                document.querySelector("#logoutButton").classList.remove("is-hidden");
+                logout(); // Attach logout functionality
+            }
+    
+            // Update the time every second
+            function updateTime() {
+                const now = new Date();
+                const timeElement = document.getElementById('realTime');
+                const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+                const formattedTime = now.toLocaleTimeString('en-US', options);
+                const formattedDate = now.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+                timeElement.textContent = `${formattedTime} - ${formattedDate}`;
+                timeElement.setAttribute('datetime', now.toISOString());
+            }
+    
+            updateTime();
+            setInterval(updateTime, 1000);
+        });
+    </script>
+    <!--
     <script src="/common.js"></script>
+    -->
 </body>
 </html>

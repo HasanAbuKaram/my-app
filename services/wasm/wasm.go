@@ -23,6 +23,8 @@ func main() {
 	global.Set("notifyme", js.FuncOf(notifyme))
 
 	select {} // Block main thread
+	// OR use a chanel to block the thread as:
+	// <-make(chan bool)
 }
 
 func handleClick(this js.Value, args []js.Value) interface{} {

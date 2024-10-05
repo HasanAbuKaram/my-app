@@ -1,19 +1,23 @@
 // common/common.js
 import msalConfig from './config.js';  // Adjust the path as needed
 
-function initializeMSAL() {
-    const myMSALObj = new msal.PublicClientApplication(msalConfig);
+// Declare the variable outside the function to make it accessible globally in the module
+let myMSALObj = new msal.PublicClientApplication(msalConfig);
+let accounts, name;
 
+function initializeMSAL() {
     // Check login status on page load
-    const accounts = myMSALObj.getAllAccounts();
+    accounts = myMSALObj.getAllAccounts();
     if (accounts.length > 0) {
         // User is logged in
-        document.querySelector("#message").innerHTML = "Hello, " + accounts[0].name + "!";
-        document.querySelector("#logoutButton").style.display = "block"; // Show logout button
+        name = accounts[0].name;
     }
+}
 
+function logout() {
+    const logoutButton = document.querySelector("#logoutButton");
     // Handle logout button click
-    document.querySelector("#logoutButton").addEventListener("click", function() {
+    logoutButton.addEventListener("click", function() {
         // Manually check for ongoing interactions using session storage
         const isInteractionInProgress = sessionStorage.getItem('msal.interaction.status') === 'interaction_in_progress';
 
@@ -32,8 +36,7 @@ function initializeMSAL() {
                     // Proceed with MSAL logout
                     myMSALObj.logout();
                     
-                    sessionStorage.removeItem("msal.interaction.status");
-                    window.location.replace("/");
+                //    window.location.replace("/");
                     //location.reload();
                 } else {
                     console.error("Failed to clear session on the server.");
@@ -49,4 +52,4 @@ function initializeMSAL() {
 }
 
 // Export the function for use in other modules
-export { initializeMSAL };
+export { initializeMSAL, logout, myMSALObj, accounts, name };
