@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{.Title}}</title>
+    <script src="{{.WasmJS}}"></script>
+    <script src="{{.BaseJS}}"></script>
+</head>
+<body>
+    {{block "content" .}} {{end}}
+</body>
+</html>
+
+
+const go = new Go();
+fetch('module1.wasm').then(response =>
+  response.arrayBuffer()
+).then(bytes =>
+  WebAssembly.instantiate(bytes, go.importObject)
+).then(result => {
+  wasm = result.instance;
+  go.run(wasm); // This will start the Go runtime
+}).catch(error => {
+  console.error('Error loading or instantiating WebAssembly:', error);
+});
+
+
+console.log("Hello from base")
+
+fetch('body.wasm')
+.then(response => response.arrayBuffer())
+.then(bytes => WebAssembly.compile(bytes))
+.then(module => {
+  const imports = WebAssembly.Module.imports(module);
+  const exports = WebAssembly.Module.exports(module);
+
+  console.log('Imports:', imports);
+  console.log('Exports:', exports);
+});
+
+
+
+package main
+
+import (
+	"html/template"
+	"net/http"
+	"path/filepath"
+)
+
+type PageData struct {
+	Title, Message, BaseJS, BodyJS, WasmJS string
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	data := PageData{
+		Title:   "Hello, World!",
+		Message: "This is a simple example of using HTML templates in Go.",
+		BaseJS:  "/script/base.js",
+		BodyJS:  "/script/body.js",
+		WasmJS:  "/script/wasm_exec.js",
+	}
+
+	baseTmpl, err := template.ParseFiles("base.html", "body.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = baseTmpl.ExecuteTemplate(w, "base.html", data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func main() {
+	http.HandleFunc("/", handler)
+
+	// Serve static files
+	http.HandleFunc("/script/", func(w http.ResponseWriter, r *http.Request) {
+		filePath := r.URL.Path[len("/script/"):]
+		if filepath.Ext(filePath) == ".wasm" {
+			w.Header().Set("Content-Type", "application/wasm")
+		}
+		http.ServeFile(w, r, "script/"+filePath)
+	})
+
+	http.ListenAndServe(":8080", nil)
+}

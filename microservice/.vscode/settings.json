@@ -1,0 +1,13 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "172.19.0.2",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "wildfly_server",
+            "username": "admin@pg",
+            "database": "postgres"
+        }
+    ]
+}

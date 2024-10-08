@@ -1,0 +1,122 @@
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"path/filepath"
+)
+
+func submitHandler(w http.ResponseWriter, r *http.Request) {
+	// Allow cross-origin requests
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
+	// Handle the form data submission
+	if r.Method == "POST" {
+		// Parse the form data
+		err := r.ParseMultipartForm(10 << 20) // Max 10 MB for file uploads
+		if err != nil {
+			http.Error(w, "Unable to parse form", http.StatusBadRequest)
+			return
+		}
+
+		// Print the form values
+		for key, values := range r.Form {
+			for _, value := range values {
+				fmt.Printf("Field name: %s, Value: %s\n", key, value)
+			}
+		}
+
+		// Print the files if there are any
+		if r.MultipartForm != nil {
+			for key, files := range r.MultipartForm.File {
+				for _, fileHeader := range files {
+					fmt.Printf("File field name: %s, File name: %s\n", key, fileHeader.Filename)
+				}
+			}
+		}
+
+		// Respond with a success message
+		fmt.Fprintln(w, "Form submitted successfully")
+	}
+}
+
+func handleFormSubmit(w http.ResponseWriter, r *http.Request) {
+	// Set CORS headers to allow requests from localhost:8080
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	// Handle preflight (OPTIONS) requests
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
+	// Set max memory for parsing multipart forms (10 MB in this example)
+	err := r.ParseMultipartForm(10 << 20) // 10 MB
+	if err != nil {
+		http.Error(w, "Error parsing form data", http.StatusBadRequest)
+		return
+	}
+
+	// Retrieve form fields
+	department := r.FormValue("department")
+	requestType := r.FormValue("requestType")
+	requestDate := r.FormValue("requestDate")
+	justification := r.FormValue("justification")
+	approvedBudget := r.FormValue("member") // This is for radio buttons
+
+	// Print the received form data
+	fmt.Printf("Department: %s\n", department)
+	fmt.Printf("Request Type: %s\n", requestType)
+	fmt.Printf("Request Date: %s\n", requestDate)
+	fmt.Printf("Justification: %s\n", justification)
+	fmt.Printf("Approved Budget: %s\n", approvedBudget)
+
+	// Process file uploads
+	files := r.MultipartForm.File
+	for _, fileHeaders := range files {
+		for _, fileHeader := range fileHeaders {
+			// Open the uploaded file
+			file, err := fileHeader.Open()
+			if err != nil {
+				http.Error(w, "Unable to open uploaded file", http.StatusInternalServerError)
+				return
+			}
+			defer file.Close()
+
+			// Create a destination file on the server
+			destPath := filepath.Join("uploads", fileHeader.Filename)
+			outFile, err := os.Create(destPath)
+			if err != nil {
+				http.Error(w, "Unable to create the file", http.StatusInternalServerError)
+				return
+			}
+			defer outFile.Close()
+
+			// Copy the uploaded file data to the destination file
+			_, err = io.Copy(outFile, file)
+			if err != nil {
+				http.Error(w, "Failed to save the file", http.StatusInternalServerError)
+				return
+			}
+
+			// Log and respond with success message for each file
+			fmt.Printf("File %s uploaded successfully\n", fileHeader.Filename)
+		}
+	}
+
+	// Respond with a success message after processing form and files
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Form submitted successfully"))
+}

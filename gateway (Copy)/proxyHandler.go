@@ -2,6 +2,7 @@ package main
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -41,15 +42,33 @@ func proxyHandler(w http.ResponseWriter, r *http.Request) {
 	case "/":
 		serveIndex(w, r)
 	case "/procurement":
-		loadBalance(w, r)
+		proxyProcurement(w, r)
+		//loadBalance(w, r)
 	case "/maintenance":
+		loadBalance(w, r)
 		proxyMaintenance(w, r)
 	default:
+		// http.Error(w, "Not Found", http.StatusNotFound) // More specific error handling
 		renderErrorPage(w)
 	}
 }
 
-// proxyMaintenance handles proxying requests to the maintenance service
+func proxyProcurement(w http.ResponseWriter, r *http.Request) {
+	// The target is the reverse proxy running on port 8081
+	targetURL, err := url.Parse("http://localhost:8081/procurement")
+	if err != nil {
+		log.Fatal("Error parsing target URL:", err)
+	}
+
+	// Create a reverse proxy for the target server
+	proxy := httputil.NewSingleHostReverseProxy(targetURL)
+
+	// Proxy requests to /form and /submit to the reverse proxy at 8081
+	proxy.ServeHTTP(w, r)
+
+	log.Println("Main server running on port 8080, proxying to 8081")
+}
+
 func proxyMaintenance(w http.ResponseWriter, r *http.Request) {
 	maintenanceURL := AppConfig.Services.Maintenance.URL
 	if !serviceIsAvailable(maintenanceURL) {
@@ -57,36 +76,48 @@ func proxyMaintenance(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Parse the target URL
-	url, err := url.Parse(maintenanceURL)
-	if err != nil {
-		http.Error(w, "Bad Gateway", http.StatusBadGateway)
-		return
-	}
-
-	// Create a new reverse proxy
-	proxy := &httputil.ReverseProxy{
-		Director: func(req *http.Request) {
-			// Modify request as necessary (e.g., add/remove headers)
-			req.Host = url.Host
-			req.URL.Scheme = url.Scheme
-			req.URL.Host = url.Host
-			req.Header.Add("X-Forwarded-Host", r.Host)
-			req.Header.Add("X-Origin-Host", req.Host)
-		},
-		ModifyResponse: func(resp *http.Response) error {
-			// Handle response before sending back to the client
-			// Example: check for login/logout related headers
-			if resp.StatusCode == http.StatusUnauthorized {
-				// Handle unauthorized response, e.g., redirect to login page
-			}
-			return nil
-		},
-	}
-
-	// Serve the proxy
-	proxy.ServeHTTP(w, r)
+	// Use the existing reverseProxy function
+	reverseProxy(maintenanceURL).ServeHTTP(w, r)
 }
+
+// proxyMaintenance handles proxying requests to the maintenance service
+// func proxyMaintenance(w http.ResponseWriter, r *http.Request) {
+// 	maintenanceURL := AppConfig.Services.Maintenance.URL
+// 	if !serviceIsAvailable(maintenanceURL) {
+// 		renderErrorPage(w)
+// 		return
+// 	}
+
+// 	// Parse the target URL
+// 	url, err := url.Parse(maintenanceURL)
+// 	if err != nil {
+// 		http.Error(w, "Bad Gateway", http.StatusBadGateway)
+// 		return
+// 	}
+
+// 	// Create a new reverse proxy
+// 	proxy := &httputil.ReverseProxy{
+// 		Director: func(req *http.Request) {
+// 			// Modify request as necessary (e.g., add/remove headers)
+// 			req.Host = url.Host
+// 			req.URL.Scheme = url.Scheme
+// 			req.URL.Host = url.Host
+// 			req.Header.Add("X-Forwarded-Host", r.Host)
+// 			req.Header.Add("X-Origin-Host", req.Host)
+// 		},
+// 		ModifyResponse: func(resp *http.Response) error {
+// 			// Handle response before sending back to the client
+// 			// Example: check for login/logout related headers
+// 			if resp.StatusCode == http.StatusUnauthorized {
+// 				// Handle unauthorized response, e.g., redirect to login page
+// 			}
+// 			return nil
+// 		},
+// 	}
+
+// 	// Serve the proxy
+// 	proxy.ServeHTTP(w, r)
+// }
 
 // serviceIsAvailable checks if the service is available
 func serviceIsAvailable(serviceURL string) bool {

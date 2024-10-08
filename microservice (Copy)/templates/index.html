@@ -1,0 +1,223 @@
+{{ define "content" }}
+<link rel="stylesheet"
+href="http://localhost:8080/common/libs/tabulator-master/dist/css/tabulator.css">
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+}
+
+.clickable-element {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    position: relative; /* Required for positioning the popup */
+}
+
+.popup-menu {
+    display: none; /* Initially hidden */
+    position: absolute;
+    top: 100%; /* Position below the clickable element */
+    left: 0;
+    width: 150px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Ensures it appears above other elements */
+}
+
+.popup-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.popup-menu li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.popup-menu li:hover {
+    background-color: #f0f0f0;
+}
+
+</style>
+<form id="request-form" class="is-normal">
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">General Information</p>
+    <div class="level">
+    <div class="level-right">
+      <p class="subtitle is-5">Document Reference:</p>
+    </div>
+    <div class="level-item">
+      <p class="control is-narrow">
+        <input class="input" type="text" style="right: 10px;" disabled>
+      </p>
+    </div>
+  </div>
+  </header>
+  <div class="card-content">
+
+      <div class="level">
+        <div class="level-left">
+          <div class="level-item">
+            <p class="subtitle is-5">Department</p>
+          </div>
+          <div class="level-item">
+            <div class="select">
+              <select name="department">
+                <option>Maintenance</option>
+                <option>Business development</option>
+                <option>Marketing</option>
+                <option>Sales</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="level-item">
+            <p class="subtitle is-5">Request Type</p>
+          </div>
+          <div class="level-item">
+            <div class="select">
+              <select name="requestType">
+                <option>New Asset</option>
+                <option>Asset Upgrade</option>
+                <option>Material</option>
+                <option>Service</option>
+                <option>Costing</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="level-item">
+            <p class="subtitle is-5">Request Delivery/Supply Date</p>
+          </div>
+          <div class="level-item">
+            <p class="control is-narrow">
+              <input name="requestDate" class="input" type="date" required>
+            </p>
+          </div>
+
+          <div class="level-item">
+            <p class="subtitle is-5">Approved budget</p>
+          </div>
+          <div class="level-item">
+            <div class="control" style="margin-top: 3px;">
+              <label class="radio">
+                  <input name="approvedBudget" type="radio" value="Yes" required>
+                  Yes
+              </label>
+              <label class="radio">
+                  <input name="approvedBudget" type="radio" value="No">
+                  No
+              </label>
+          </div>        
+        </div>
+      
+        </div class="level-right">
+          <div class="level-item">
+            <div class="control">
+              <label class="file is-primary file-label">
+                <input class="file-input" type="file" id="file-upload" multiple>
+                <span class="file-cta file-label">
+                  Upload files
+                </span>
+              </label>
+            </div>
+            &nbsp;&nbsp;
+            <div class="control">
+              <button class="button is-primary">
+                  Submit
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="is-hidden" id="file-list">
+          Attachments list
+        </div>
+        
+        <div class="level-left">
+          <div class="level-item">
+            <p class="subtitle is-5">Justification</p>
+          </div>
+          <div class="level-item">
+
+          <div class="control">
+            <textarea name="justification" cols="160" rows="3" style="resize: none;"
+            class="textarea is-danger"
+            placeholder="Ener clear justification and business needs of the request"
+            required></textarea>
+          </div>
+
+        </div>
+
+      </div>
+  </div>
+</div>
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">Purchase Request Details</p>
+  </header>
+  <div class="card-content">
+
+      <div id="items-table" name="lines"></div>
+
+      <div class="field is-horizontal" style="padding-top: 1%;">
+        <div class="file is-primary is-normal">
+          <label class="file-label">
+            <input class="file-input" type="button" name="resume" />
+              <span class="file-cta">
+                <span id="add-row" class="file-label"> Add Item </span>
+              </span>
+          </label>
+        </div>
+        &nbsp;&nbsp;
+        <div class="file is-primary is-normal">
+          <label class="file-label">
+            <input class="file-input" type="button" name="resume" />
+              <span class="file-cta">
+                <span id="del-row" class="file-label"> Delete Item </span>
+              </span>
+          </label>
+        </div>
+        &nbsp;&nbsp;
+        <div class="file is-primary is-normal">
+          <label class="file-label">
+            <input class="file-input" type="button" name="resume" />
+              <span class="file-cta">
+                <span id="clear" class="file-label">Clear</span>
+              </span>
+          </label>
+        </div>
+        &nbsp;&nbsp;
+        <div class="file is-primary is-normal">
+          <label class="file-label">
+            <input class="file-input" type="button" name="resume" />
+              <span class="file-cta">
+                <span id="reset" class="file-label">Reset</span>
+              </span>
+          </label>
+        </div>
+      </div>
+  </div>
+</div>
+
+</form>
+
+<script src="http://localhost:8080/common/libs/tabulator-master/dist/js/tabulator.min.js"></script>
+<script src="http://localhost:8081/www/actions.js"></script>
+<script src="http://localhost:8081/www/buildTabulator.js"></script>
+<script src="http://localhost:8081/www/script.js"></script>
+<!--
+<script src="http://localhost:8081/www/formsend.js"></script>
+-->
+
+{{ end }}

@@ -1,18 +1,20 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+	"net/http/httputil"
+	"net/url"
 	"os"
 	"path/filepath"
 )
 
 // Main entry point of the application
 func main() {
-	// Load the configuration from the config file
-	if err := LoadConfig("config/config.json"); err != nil {
-		log.Fatalf("Error loading config: %v", err) // Log error and exit
+	// The target is the reverse proxy running on port 8081
+	targetURL, err := url.Parse("http://localhost:8081")
+	if err != nil {
+		log.Fatal("Error parsing target URL:", err)
 	}
 
 	cwd, err := os.Getwd()
@@ -25,19 +27,18 @@ func main() {
 	fs := http.FileServer(http.Dir(staticPath))
 	http.Handle("/common/", http.StripPrefix("/common/", fs))
 
-	// Access and log the loaded configuration
-	log.Printf("RabbitMQ URL: %s", AppConfig.RabbitMQ.URL)
-	log.Printf("Proxy Listen Port: %d", AppConfig.Services.Proxy.ListenPort)
+	// Create a reverse proxy for the target server
+	proxy := httputil.NewSingleHostReverseProxy(targetURL)
 
-	// Set up the HTTP server with the proxy handler
-	http.HandleFunc("/", proxyHandler) // All requests will be handled by proxyHandler
-	// Start a goroutine with an HTTP server
-	http.HandleFunc("/login", login)
+	http.HandleFunc("/", serveIndex)
+
 	http.HandleFunc("/api/token", tokenHandler)
-	http.HandleFunc("/profile", profileHandler) // Protected route
-	http.HandleFunc("/logout", logoutHandler)
 
-	// Start the proxy server
-	log.Printf("Starting proxy server on :%d\n", AppConfig.Services.Proxy.ListenPort)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", AppConfig.Services.Proxy.ListenPort), nil))
+	// Proxy requests to /form and /submit to the reverse proxy at 8081
+	http.HandleFunc("/procurement", func(w http.ResponseWriter, r *http.Request) {
+		proxy.ServeHTTP(w, r)
+	})
+
+	log.Println("Main server running on port 8080, proxying to 8081")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

@@ -1,0 +1,75 @@
+document.getElementById('family-form').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Store the current form and table data before submission
+    const formDataBeforeSubmit = new FormData(this);
+    const filesDataBeforeSubmit = [...filesData]; // Create a copy of filesData array
+
+    const formData = new FormData(this); // Create a FormData object
+
+    // Append each file from filesData array to the FormData object
+    filesData.forEach((file, index) => {
+        formData.append(`file_${index}`, file);
+    });
+
+    try {
+        const response = await fetch('/submit', {
+            method: 'POST',
+            body: formData // Send the FormData object directly
+        });
+
+        if (response.ok) {
+            // Form submitted successfully
+            document.getElementById('family-form').reset(); // Clear the form
+            displayNotification('Submission successful', 'success');
+
+            // Clear the file input field
+            filesData = [];
+            const fileList = document.getElementById('file-list');
+            fileList.innerHTML = '';
+
+            // Remove all rows from the items table
+            const itemsTableBody = document.querySelector('#items-table tbody');
+            itemsTableBody.innerHTML = '';
+        } else {
+            // Error submitting form
+            displayNotification('Failed to submit the form', 'error');
+            restoreFormData(formDataBeforeSubmit);
+            filesData = [...filesDataBeforeSubmit]; // Restore the original filesData array
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        displayNotification('An error occurred while submitting the form', 'error');
+        // Restore the form and table data
+        restoreFormData(formDataBeforeSubmit);
+        filesData = [...filesDataBeforeSubmit]; // Restore the original filesData array
+    }
+});
+
+function restoreFormData(formData) {
+    for (const [key, value] of formData.entries()) {
+        if (key.endsWith('[]')) {
+            // Restore values for array fields
+            const inputElements = document.querySelectorAll(`[name="${key}"]`);
+            inputElements.forEach((input, index) => {
+                input.value = value[index];
+            });
+        } else {
+            // Restore values for non-array fields
+            const inputElement = document.querySelector(`[name="${key}"]`);
+            if (inputElement) {
+                inputElement.value = value;
+            }
+        }
+    }
+}
+
+function displayNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.classList.add(type);
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        notification.remove();
+    }, 3000); // Remove notification after 3 seconds
+}

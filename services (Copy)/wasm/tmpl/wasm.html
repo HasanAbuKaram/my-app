@@ -1,0 +1,12 @@
+<script src="/script/wasm_exec.js"></script>
+<script>
+    const go = new Go();
+    let wasm;
+
+    fetch('main.wasm').then(response =>
+    response.arrayBuffer()
+    ).then(bytes => WebAssembly.instantiate(bytes, go.importObject)).then(result => {
+    wasm = result.instance;
+    go.run(wasm); // This will start the Go runtime
+    })
+</script>

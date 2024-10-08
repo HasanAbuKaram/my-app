@@ -17,11 +17,11 @@ var table = new Tabulator("#items-table", {
     columns:[
         {title:"Item", field:"item", editor:"input"},
         {title:"Qty", field:"qty", width:90, editor:"number"},
-        {title:"UoM", field:"gender", width:90, editor:"list", editorParams:{values:{"ea":"Each", "kg":"Kilogram", "unknown":"Unknown"}}},
+        {title:"UoM", field:"uom", width:90, editor:"list", editorParams:{values:{"ea":"Each", "kg":"Kilogram", "unknown":"Unknown"}}},
         {title:"Budget (SAR)", field:"budget", width:150, editor:"number"},
         {title:"Required by", field:"rdd",  width:150, formatter:"date", hozAlign:"center", width:100, editor:true},
         {title:"Detailed Description/Scope", field:"scope", editor:"input"},
-        {title:"Recomended Source", field:"recSource", editor:"input"},
+        {title:"Recomended Source", field:"resource", editor:"input"},
      //   { title: "Actions", field: "actions", width: 100, hozAlign: "center", formatter: actionMenuFormatter }, // Use the actionMenuFormatter
         // {
         //     title: "Actions", field: "actions", width: 100, hozAlign: "center", formatter: function (cell, formatterParams) {

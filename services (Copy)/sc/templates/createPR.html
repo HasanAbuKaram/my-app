@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Purchase Request</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+  <script src="createPR.js"></script>
+</head>
+<body>
+  <h1>Create Purchase Request</h1>
+  <form id="prForm" method="post" action="createPR" enctype="multipart/form-data">
+    <label for="prNumber">PR Number:</label>
+    <input type="text" id="prNumber" name="prNumber" required>
+    <label for="prType">PR Type:</label>
+    <select id="prType" name="prType" required>
+      <option value="Material">Material</option>
+      <option value="Service">Service</option>
+      <option value="Budgetary">Budgetary</option>
+    </select>
+    <label for="requiredDate">Required Date:</label>
+    <input type="date" id="requiredDate" name="requiredDate" required>
+
+    <label for="fileUpload">Upload Document(s):</label>
+    <input type="file" id="fileUpload" name="fileUpload" multiple>
+
+    <div id="prLines">
+      <div class="line-item">
+        <label for="item">Item:</label>
+        <input type="text" id="item" name="item" required>
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" required>
+        <label for="uom">UoM:</label>
+        <input type="text" id="uom" name="uom">
+        <label for="lineRequiredDate">Required Date:</label>
+        <input type="date" id="lineRequiredDate" name="lineRequiredDate">
+      </div>
+    </div>
+    <button type="button" onclick="addLine()">Add Line Item</button>
+    <br>
+    <button type="submit">Submit PR</button>
+  </form>
+</body>
+</html>

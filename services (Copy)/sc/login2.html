@@ -1,0 +1,52 @@
+<!-- Copyright (c) Microsoft Corporation.
+     Licensed under the MIT License. -->
+
+<!-- <indexSnippet> -->
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+      <meta http-equiv="Pragma" content="no-cache" />
+      <meta http-equiv="Expires" content="0" />
+
+      <title>User login</title>
+
+      <link rel="shortcut icon" href="g-raph.png">
+      <link href="style.css" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body>
+        <!-- Navih=gator and Menu -->
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+
+        </nav>
+
+
+
+        <!-- MAIN content -->
+      <main id="main-container" role="main" class="container">
+      </main>
+
+      <!-- MSAL -->
+      <script src="https://localhost:8080/cdn/js/msal-browser.js"
+              integrity="sha384-+8A1rifuHuJxJgQn6UCxGgmo6Q2SvIeEAqtPOsXCpi0DpqZLtuDhxxnqjJZw/1ve"
+              crossorigin="anonymous"></script>
+
+      <!-- Graph SDK -->
+      <script src="https://localhost:8080/cdn/js/graph-js-sdk.js"></script>
+      <script src="https://localhost:8080/cdn/js/graph-client-msalBrowserAuthProvider.js"></script>
+
+      <script src="https://localhost:8080/assets/js/config.js"></script>
+      <script src="https://localhost:8080/assets/js/ui.js"></script>
+      <script src="https://localhost:8080/assets/js/graph.js"></script>
+      <script src="https://localhost:8080/assets/js/auth.js"></script>
+
+      <button onclick="signIn()">Sign In</button>
+      <button id="logoutButton" onclick="signOut()" style="display: none;">Logout</button>
+  
+      <div id="message"></div>
+    </body>
+    </html>
+    <!-- </indexSnippet> -->
